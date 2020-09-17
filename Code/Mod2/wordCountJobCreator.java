@@ -11,7 +11,7 @@ public class wordCountJobCreator {
 
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "word count");
-        job.setNumReduceTask(1);
+        job.setNumReduceTasks(1);
         job.setJarByClass(wordCountJobCreator.class);
         job.setJobName("Word Count");
 
