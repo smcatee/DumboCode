@@ -4,7 +4,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public static class wordCountReduce 
+public class wordCountReduce 
     extends Reducer<Text,IntWritable,Text,IntWritable> {
     
         private IntWritable count = new IntWritable();

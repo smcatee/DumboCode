@@ -5,7 +5,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-public static class wordCountMap
+public class wordCountMap
     extends Mapper<LongWritable, Text, Text, IntWritable> {
 
         private IntWritable count = new IntWritable();
