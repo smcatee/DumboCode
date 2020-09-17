@@ -15,7 +15,7 @@ public class wordCountJobCreator {
         job.setJobName("Word Count");
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path("output_" + args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
         job.setMapperClass(wordCountMap.class);
         job.setReducerClass(wordCountReduce.class);
