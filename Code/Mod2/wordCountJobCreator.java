@@ -9,7 +9,8 @@ public class wordCountJobCreator {
 
     public static void main(String[] args) throws Exception {
 
-        Job job = new Job();
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "word count");
         job.setNumReduceTask(1);
         job.setJarByClass(wordCountJobCreator.class);
         job.setJobName("Word Count");
