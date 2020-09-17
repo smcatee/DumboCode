@@ -12,7 +12,7 @@ public class wordCountMap
         private Text searchTerm = new Text();
         private final static String[] searchTermArray = new String[]{"hackathon", "Dec", "Chicago", "Java"};
 
-        public void map(Object key, Text value, Context context)
+        public void map(Text key, Text value, Context context)
         throws IOException, InterruptedException {
                 
             String line = value.toString();
