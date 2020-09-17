@@ -11,7 +11,7 @@ public class wordCountJobCreator {
 
         Job job = new Job();
         job.setNumReduceTask(1);
-        job.setJarByClass(wordCount.class);
+        job.setJarByClass(wordCountJobCreator.class);
         job.setJobName("Word Count");
 
         FileInputFormat.addInputPath(job, new Path(args[0]));
