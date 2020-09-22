@@ -120,7 +120,18 @@ public class WordCount2 {
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~ JOB CONFIG ~~~~~~~~~~~~~~~~~~~~~~~~
-  
+    // Need to address:
+    // different input types and ways to customize (inputsplit, inputformat)
+    // how to override cleanup(Context) to perform cleanup of input
+    // does output have to be a writable type??
+    // how to use Counter to report stats mid run
+    // how to custom group each? map output with Job.setGroupingComparatorClass()
+    // how to create a custom Partitioner (which sends specific keys to the same reducers)
+    // how (why?) to set custom sort and group methods in the stage between reduce input gathering and reduce running
+    // how to use FileOutputFormat.getWorkOutputPath() to create side files while in map
+    // how to use counters Counters.incrCounter(Enum, long)
+    // distributed cache?
+
     public static void main(String[] args) throws Exception {
       Configuration conf = new Configuration();
       GenericOptionsParser optionParser = new GenericOptionsParser(conf, args);
@@ -129,10 +140,16 @@ public class WordCount2 {
         System.err.println("Usage: wordcount <in> <out> [-skip skipPatternFile]");
         System.exit(2);
       }
+
+
       Job job = Job.getInstance(conf, "word count");
+
+      // keep in mind, the shuffle/reduce phase could be a complex bottleneck from designated memory(buffer)/storage(disk)/segments, these can be modified
+
       job.setJarByClass(WordCount2.class);
       job.setMapperClass(TokenizerMapper.class);
-      job.setCombinerClass(IntSumReducer.class);
+      job.setCombinerClass(IntSumReducer.class); // takes the list of key-vals from a single map node and processes those in a set before local storage and subsuquent accession from god knows how many reduce nodes
+                                                    // could be just a copy of the reduce class if the data is spread in the map phase and combined in the reduce phase, might as well make use of the spread data and perform some small combination on each map output set
       job.setReducerClass(IntSumReducer.class);
       job.setOutputKeyClass(Text.class);
       job.setOutputValueClass(IntWritable.class);
@@ -146,7 +163,7 @@ public class WordCount2 {
           otherArgs.add(remainingArgs[i]);
         }
       }
-      FileInputFormat.addInputPath(job, new Path(otherArgs.get(0)));
+      FileInputFormat.addInputPath(job, new Path(otherArgs.get(0))); // .gz files can be submitted, but each file is processed by a single mapper
       FileOutputFormat.setOutputPath(job, new Path(otherArgs.get(1)));
   
       System.exit(job.waitForCompletion(true) ? 0 : 1);
