@@ -1,4 +1,4 @@
-import java.io.*;
+import java.io.IOException;
 import java.util.*;
 import java.net.URI;
 
@@ -40,7 +40,7 @@ public class pageRank {
         Queue<Text> linksQueue = new PriorityQueue<>();
         float rankOfPage;
         float outputRank;
-        Text page = new Text("none");
+        Text page = "none";
         
         for ( Text elemInLine : splitLine ) {
 
