@@ -5,6 +5,7 @@ import java.util.PriorityQueue;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -28,8 +29,8 @@ public class pageRank {
          extends Mapper<Object, Text, Text, IntWritable> {
 
            PriorityQueue<String> linksQueue = new PriorityQueue<>();
-           float rankOfPage;
-           float outputRank;
+           Double rankOfPage;
+           Double outputRank;
            String page = "none";
            
            @Override
@@ -48,7 +49,7 @@ public class pageRank {
             
           } else if ( elemInLine.matches("^-?\\d*\\.{0,1}\\d$")) {
             // is rank
-            rankOfPage = Float.parseFloat(elemInLine);
+            rankOfPage = Double.parseDouble(elemInLine);
             outputRank = rankOfPage / linksQueue.size();
           } else {
             // is link
@@ -57,8 +58,8 @@ public class pageRank {
         }
         
         while (linksQueue.size() > 0) {
-          context.write(new Text(page), new Text(linksQueue.peek()));
-          context.write(new Text(linksQueue.poll()), new Text(outputRank));
+          context.write(new Text(page), new Text(linksQueue.peek().toString()));
+          context.write(new Text(linksQueue.poll()), new Text(outputRank.toString()));
         }
         
       }
@@ -70,7 +71,7 @@ public class pageRank {
          extends Reducer<Text,IntWritable,Text,IntWritable> {
 
            PriorityQueue<String> linksQueue = new PriorityQueue<>();
-           float rankOfPage = 0;
+           Double rankOfPage = Double.valueOf(0.0);
            String outputValue = "";
            
            public void reduce(Text key, Text values,   // values will come in as arrays
@@ -84,7 +85,7 @@ public class pageRank {
 
           if ( elemInLine.matches("^-?\\d*\\.{0,1}\\d$")) {
             // is rank
-            rankOfPage += Float.parseFloat(elemInLine);
+            rankOfPage += Double.parseDouble(elemInLine);
           } else {
             // is link
             linksQueue.add(elemInLine);
