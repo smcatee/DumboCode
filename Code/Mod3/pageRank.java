@@ -25,22 +25,21 @@ public class pageRank {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~ MAPPER ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    public static class pageRankMapper
+    public class pageRankMapper
          extends Mapper<Object, Text, Text, IntWritable> {
-  
-      private Configuration conf;
+
+           String line = value.toString();
+           String[] splitLine = line.split("\\s");
+           Queue<Text> linksQueue = new PriorityQueue<>();
+           float rankOfPage;
+           float outputRank;
+           Text page = "none";
   
       @Override
       public void map(Object key, Text value, Context context
                       ) throws IOException, InterruptedException {
         //input will be line# as key and line as value
 
-        String line = value.toString();
-        String[] splitLine = line.split("\\s");
-        Queue<Text> linksQueue = new PriorityQueue<>();
-        float rankOfPage;
-        float outputRank;
-        Text page = "none";
         
         for ( Text elemInLine : splitLine ) {
 
@@ -67,18 +66,19 @@ public class pageRank {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~ REDUCER ~~~~~~~~~~~~~~~~~~~~~~~~
   
-    public static class pageRankReducer
+    public class pageRankReducer
          extends Reducer<Text,IntWritable,Text,IntWritable> {
+           
+           Queue<String> linksQueue = new PriorityQueue<>();
+           String line = values.toString();
+           String[] splitLine = line.split("\\s");
+           float rankOfPage = 0;
+           Text outputValue = new Text();
   
       public void reduce(Text key, Text values,   // values will come in as arrays
                          Context context
                          ) throws IOException, InterruptedException {
         //input will be pages as keys and values as a list of links and ranks
-        Queue<String> linksQueue = new PriorityQueue<>();
-        String line = values.toString();
-        String[] splitLine = line.split("\\s");
-        float rankOfPage = 0;
-        Text outputValue = new Text();
 
         for ( String elemInLine : splitLine ) {
 
