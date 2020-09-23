@@ -72,7 +72,7 @@ public class pageRank {
   
     public static class pageRankReducer extends Reducer<Text,Text,Text,Text> {
       public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
-        PriorityQueue<String> linksQueue = new PriorityQueue<>();
+        //PriorityQueue<String> linksQueue = new PriorityQueue<>();
         Double rankOfPage = Double.valueOf(0.0);
         String outputValue = "";
         
@@ -84,11 +84,11 @@ public class pageRank {
             rankOfPage += Double.parseDouble(elemInLine.toString());
           } else {
             // is link
-            linksQueue.add(elemInLine.toString());
+            outputValue = outputValue + " " + elemInLine.toString();
+            //linksQueue.add(elemInLine.toString());
           }
         }
-
-        outputValue = linksQueue.toString() + " " + rankOfPage.toString();
+        outputValue = outputValue + " " + rankOfPage.toString();
         context.write(key, new Text(outputValue));
       }
     }
@@ -119,6 +119,9 @@ public class pageRank {
   
       FileInputFormat.addInputPath(job, new Path(args[0]));
       FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+      Configuration conf = new Configuration();
+      conf.set("mapred.textoutputformat.separator", "\s");
   
       System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
