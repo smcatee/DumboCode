@@ -27,7 +27,7 @@ public class pageRank {
     //~~~~~~~~~~~~~~~~~~~~~~~~ MAPPER ~~~~~~~~~~~~~~~~~~~~~~~~
 
     public class pageRankMapper
-         extends Mapper<Object, Text, Text, Text> {
+         extends Mapper<LongWritable, Text, Text, Text> {
 
            PriorityQueue<String> linksQueue = new PriorityQueue<>();
            Double rankOfPage;
@@ -35,7 +35,7 @@ public class pageRank {
            String page = "none";
            
            @Override
-           public void map(Object key, Text value, Context context
+           public void map(LongWritable key, Text value, Context context
            ) throws IOException, InterruptedException {
              //input will be line# as key and line as value
              
