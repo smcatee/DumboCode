@@ -35,21 +35,21 @@ public class pageRank {
                       ) throws IOException, InterruptedException {
         //input will be line# as key and line as value
 
-        private String line = value.toString();
-        private String[] splitLine = line.split("\\s");
-        private Queue<Character> linksQueue = new PriorityQueue<>();
-        private float rankOfPage;
-        private Text page = new Text("none");
+        String line = value.toString();
+        String[] splitLine = line.split("\\s");
+        Queue<Character> linksQueue = new PriorityQueue<>();
+        float rankOfPage;
+        Text page = new Text("none");
         
         for ( String elemInLine : splitLine ) {
 
           if (page.equals("none")) {
             // is page
             page = elemInLine;
-          } else if ( elemInLine.matches("^-?\d*\.{0,1}\d$" ) {
+          } else if ( elemInLine.matches("^-?\d*\.{0,1}\d$")) {
             // is rank
             rankOfPage = parseFloat(elemInLine);
-            outputRank = rankOfPage / linksQueue.size()
+            outputRank = rankOfPage / linksQueue.size();
           } else {
             // is link
             linksQueue.offer(elemInLine);
@@ -75,15 +75,15 @@ public class pageRank {
                          ) throws IOException, InterruptedException {
         //input will be pages as keys and values as a list of links and ranks
         Queue<Character> linksQueue = new PriorityQueue<>();
-        private String line = value.toString();
-        private String[] splitLine = line.split("\\s");
-        private Queue<Character> linksQueue = new PriorityQueue<>();
-        private float rankOfPage = 0;
-        private String outputValue;
+        String line = value.toString();
+        String[] splitLine = line.split("\\s");
+        Queue<Character> linksQueue = new PriorityQueue<>();
+        float rankOfPage = 0;
+        String outputValue;
 
         for ( String elemInLine : splitLine ) {
 
-          if ( elemInLine.matches("^-?\d*\.{0,1}\d$" ) {
+          if ( elemInLine.matches("^-?\d*\.{0,1}\d$")) {
             // is rank
             rankOfPage += parseFloat(elemInLine);
           } else {
