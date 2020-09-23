@@ -27,18 +27,18 @@ public class pageRank {
     public class pageRankMapper
          extends Mapper<Object, Text, Text, IntWritable> {
 
-           String line = value.toString();
-           String[] splitLine = line.split("\\s");
            PriorityQueue<String> linksQueue = new PriorityQueue<>();
            float rankOfPage;
            float outputRank;
            String page = "none";
-  
-      @Override
-      public void map(Object key, Text value, Context context
-                      ) throws IOException, InterruptedException {
-        //input will be line# as key and line as value
-
+           
+           @Override
+           public void map(Object key, Text value, Context context
+           ) throws IOException, InterruptedException {
+             //input will be line# as key and line as value
+             
+             String line = value.toString();
+             String[] splitLine = line.split("\\s");
         
         for ( String elemInLine : splitLine ) {
 
