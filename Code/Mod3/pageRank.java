@@ -94,13 +94,16 @@ public class pageRank {
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~ JOB CONFIG ~~~~~~~~~~~~~~~~~~~~~~~~
-
+    
     public static void main(String[] args) throws Exception {
       if (args.length != 2) {
         System.err.println("Usage: <in> <out>");
         System.exit(2);
       }
 
+      Configuration conf = new Configuration();
+      conf.set("mapreduce.textoutputformat.separator", " ");
+      
       Job job = new Job();
       job.setJobName("page rank");
       // keep in mind, the shuffle/reduce phase could be a complex bottleneck from designated memory(buffer)/storage(disk)/segments, these can be modified
@@ -120,8 +123,6 @@ public class pageRank {
       FileInputFormat.addInputPath(job, new Path(args[0]));
       FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-      Configuration conf = new Configuration();
-      conf.set("mapred.textoutputformat.separator", " ");
   
       System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
