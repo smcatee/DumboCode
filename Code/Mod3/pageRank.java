@@ -37,12 +37,12 @@ public class pageRank {
 
         String line = value.toString();
         String[] splitLine = line.split("\\s");
-        Queue<String> linksQueue = new PriorityQueue<>();
+        Queue<Text> linksQueue = new PriorityQueue<>();
         float rankOfPage;
         float outputRank;
-        String page = new String("none");
+        Text page = new Text("none");
         
-        for ( String elemInLine : splitLine ) {
+        for ( Text elemInLine : splitLine ) {
 
           if (page.equals("none")) {
             // is page
@@ -69,7 +69,6 @@ public class pageRank {
   
     public static class pageRankReducer
          extends Reducer<Text,IntWritable,Text,IntWritable> {
-      private IntWritable result = new IntWritable();
   
       public void reduce(Text key, Text values,   // values will come in as arrays
                          Context context
@@ -79,7 +78,7 @@ public class pageRank {
         String line = values.toString();
         String[] splitLine = line.split("\\s");
         float rankOfPage = 0;
-        String outputValue = new String();
+        Text outputValue = new Text();
 
         for ( String elemInLine : splitLine ) {
 
