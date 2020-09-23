@@ -33,7 +33,7 @@ public class pageRank {
         String line = value.toString();
         String[] splitLine = line.split("\\s");
         PriorityQueue<String> linksQueue = new PriorityQueue<>(); //maybe problem is with this not having correct import. or just use a list
-        Double outputRank;
+        Double outputRank = 0.0;
         String page = "none";
 
         // the key is ignored
