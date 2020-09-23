@@ -27,41 +27,42 @@ public class pageRank {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~ MAPPER ~~~~~~~~~~~~~~~~~~~~~~~~
 
-    public class pageRankMapper
-         extends Mapper<LongWritable, Text, Text, Text> {
+    public static class pageRankMapper extends Mapper<LongWritable, Text, Text, Text> {
+      @Override
+      public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String line = value.toString();
+        String[] splitLine = line.split("\\s");
+        PriorityQueue<String> linksQueue = new PriorityQueue<>(); //maybe problem is with this not having correct import. or just use a list
+        Double outputRank;
+        String page = "none";
 
-           PriorityQueue<String> linksQueue = new PriorityQueue<>();
-           Double rankOfPage;
-           Double outputRank;
-           String page = "none";
-           
-           @Override
-           public void map(LongWritable key, Text value, Context context
-           ) throws IOException, InterruptedException {
-             //input will be line# as key and line as value
-             
-             String line = value.toString();
-             String[] splitLine = line.split("\\s");
-        
+        // the key is ignored
+        // in value the first element is the page, the next elements are links, the final element is a rank
+        // save the first element as page
+        // save the links in a queue
+        // save the rank as outputRank
         for ( String elemInLine : splitLine ) {
-
           if (page.equals("none")) {
             // is page
             page = elemInLine;
             
-          } else if ( elemInLine.matches("^-?\\d*\\.{0,1}\\d$")) {
+          } else if ( elemInLine.matches("\\d*\\.{0,1}\\d")) {
             // is rank
-            rankOfPage = Double.parseDouble(elemInLine);
-            outputRank = rankOfPage / linksQueue.size();
+            outputRank = Double.parseDouble(elemInLine);
           } else {
             // is link
             linksQueue.add(elemInLine);
           }
         }
         
+        // the proportional rank to give to each link
+        outputRank = outputRank / linksQueue.size();
+
+        // for each link output key=page and value=link
+        // for each link output key=link and value=rank
         while (linksQueue.size() > 0) {
-          context.write(new Text(page), new Text(linksQueue.peek().toString()));
-          context.write(new Text(linksQueue.poll()), new Text(outputRank.toString()));
+          context.write(new Text(page), new Text(linksQueue.peek().trim()));
+          context.write(new Text(linksQueue.poll().trim()), new Text(outputRank.toString().trim()));
         }
         
       }
@@ -69,23 +70,16 @@ public class pageRank {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~ REDUCER ~~~~~~~~~~~~~~~~~~~~~~~~
   
-    public class pageRankReducer
-         extends Reducer<Text,Text,Text,Text> {
-
-           PriorityQueue<String> linksQueue = new PriorityQueue<>();
-           Double rankOfPage = Double.valueOf(0.0);
-           String outputValue = "";
-           
-           public void reduce(Text key, Text values,   // values will come in as arrays
-           Context context
-           ) throws IOException, InterruptedException {
-             //input will be pages as keys and values as a list of links and ranks
-             String line = values.toString();
-             String[] splitLine = line.split("\\s");
-             
-        for ( String elemInLine : splitLine ) {
-
-          if ( elemInLine.matches("^-?\\d*\\.{0,1}\\d$")) {
+    public static class pageRankReducer extends Reducer<Text,Text,Text,Text> {
+      public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+        PriorityQueue<String> linksQueue = new PriorityQueue<>();
+        Double rankOfPage = Double.valueOf(0.0);
+        String outputValue = "";
+        
+        // the same key will be output
+        // the same values will be output, but if they are numeric they will be added together
+        for ( String elemInLine : values ) {
+          if ( elemInLine.matches("^\\d*\\.{0,1}\\d$")) {
             // is rank
             rankOfPage += Double.parseDouble(elemInLine);
           } else {
@@ -93,12 +87,8 @@ public class pageRank {
             linksQueue.add(elemInLine);
           }
         }
-        while (linksQueue.size() > 0) {
-          // create the string that will be output as value
-          outputValue = outputValue + " " + linksQueue.poll();
-        }
-        // append on rank to output thing
-        outputValue =  outputValue + " " + rankOfPage;
+
+        outputValue = linksQueue.toString() + " " + rankOfPage.toString();
         context.write(key, new Text(outputValue));
       }
     }
@@ -117,17 +107,17 @@ public class pageRank {
 
       job.setJarByClass(pageRank.class);
       job.setMapperClass(pageRankMapper.class);
-      job.setCombinerClass(pageRankReducer.class);
+      //job.setCombinerClass(pageRankReducer.class);
       job.setReducerClass(pageRankReducer.class);
 
-      job.setMapOutputKeyClass(Text.class);
-      job.setMapOutputValueClass(Text.class);
+      //job.setMapOutputKeyClass(Text.class);
+      //job.setMapOutputValueClass(Text.class);
 
       job.setNumReduceTasks(1);
       job.setOutputKeyClass(Text.class);
       job.setOutputValueClass(Text.class);
   
-      FileInputFormat.addInputPath(job, new Path(args[0])); // .gz files can be submitted, but each file is processed by a single mapper
+      FileInputFormat.addInputPath(job, new Path(args[0]));
       FileOutputFormat.setOutputPath(job, new Path(args[1]));
   
       System.exit(job.waitForCompletion(true) ? 0 : 1);
