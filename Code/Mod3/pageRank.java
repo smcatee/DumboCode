@@ -81,7 +81,7 @@ public class pageRank {
         for ( Text elemInLine : values ) {
           if ( elemInLine.toString().matches("^\\d*\\.{0,1}\\d$")) {
             // is rank
-            rankOfPage += Double.parseDouble(elemInLine);
+            rankOfPage += Double.parseDouble(elemInLine.toString());
           } else {
             // is link
             linksQueue.add(elemInLine.toString());
