@@ -100,9 +100,6 @@ public class pageRank {
         System.err.println("Usage: <in> <out>");
         System.exit(2);
       }
-
-      Configuration conf = new Configuration();
-      conf.set("mapred.textoutputformat.separator", "\\s");
       
       Job job = new Job();
       job.setJobName("page rank");
