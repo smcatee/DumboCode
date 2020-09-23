@@ -69,16 +69,16 @@ public class pageRank {
          extends Reducer<Text,IntWritable,Text,IntWritable> {
 
            PriorityQueue<String> linksQueue = new PriorityQueue<>();
-           String line = values.toString();
-           String[] splitLine = line.split("\\s");
            float rankOfPage = 0;
            String outputValue = "";
-  
-      public void reduce(Text key, Text values,   // values will come in as arrays
-                         Context context
-                         ) throws IOException, InterruptedException {
-        //input will be pages as keys and values as a list of links and ranks
-
+           
+           public void reduce(Text key, Text values,   // values will come in as arrays
+           Context context
+           ) throws IOException, InterruptedException {
+             //input will be pages as keys and values as a list of links and ranks
+             String line = values.toString();
+             String[] splitLine = line.split("\\s");
+             
         for ( String elemInLine : splitLine ) {
 
           if ( elemInLine.matches("^-?\\d*\\.{0,1}\\d$")) {
