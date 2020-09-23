@@ -26,10 +26,9 @@ public class pageRank {
     //~~~~~~~~~~~~~~~~~~~~~~~~ MAPPER ~~~~~~~~~~~~~~~~~~~~~~~~
 
     public static class pageRankMapper
-         extends Mapper<Object, Text, Text, IntWritable>{
+         extends Mapper<Object, Text, Text, IntWritable> {
   
       private Configuration conf;
-      private BufferedReader fis;
   
       @Override
       public void map(Object key, Text value, Context context
@@ -38,9 +37,9 @@ public class pageRank {
 
         private String line = value.toString();
         private String[] splitLine = line.split("\\s");
-        private Text page = new Text("none");
         private Queue<Character> linksQueue = new PriorityQueue<>();
         private float rankOfPage;
+        private Text page = new Text("none");
         
         for ( String elemInLine : splitLine ) {
 
@@ -103,41 +102,28 @@ public class pageRank {
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~ JOB CONFIG ~~~~~~~~~~~~~~~~~~~~~~~~
-    // Need to address:
-    // different input types and ways to customize (inputsplit, inputformat)
-    // how to override cleanup(Context) to perform cleanup of input
-    // does output have to be a writable type??
-    // how to use Counter to report stats mid run
-    // how to custom group each? map output with Job.setGroupingComparatorClass()
-    // how to create a custom Partitioner (which sends specific keys to the same reducers)
-    // how (why?) to set custom sort and group methods in the stage between reduce input gathering and reduce running
-    // how to use FileOutputFormat.getWorkOutputPath() to create side files while in map
-    // how to use counters Counters.incrCounter(Enum, long)
-    // distributed cache?
 
     public static void main(String[] args) throws Exception {
-      Configuration conf = new Configuration();
-      GenericOptionsParser optionParser = new GenericOptionsParser(conf, args);
-      String[] remainingArgs = optionParser.getRemainingArgs();
-      if ((remainingArgs.length != 2) {
+      if (args.length != 2) {
         System.err.println("Usage: <in> <out>");
         System.exit(2);
       }
 
-
-      Job job = Job.getInstance(conf, "page rank");
-
+      Job job = new Job();
+      job.setJobName("page rank");
       // keep in mind, the shuffle/reduce phase could be a complex bottleneck from designated memory(buffer)/storage(disk)/segments, these can be modified
 
       job.setJarByClass(pageRank.class);
       job.setMapperClass(pageRankMapper.class);
       job.setCombinerClass(pageRankReducer.class);
       job.setReducerClass(pageRankReducer.class);
+
+      job.setNumReduceTasks(1);
       job.setOutputKeyClass(Text.class);
       job.setOutputValueClass(Text.class);
   
-      FileInputFormat.addInputPath(job, new Path(otherArgs.get(0))); // .gz files can be submitted, but each file is processed by a single mapper
-      FileOutputFormat.setOutputPath(job, new Path(otherArgs.get(1)));
+      FileInputFormat.addInputPath(job, new Path(args[0])); // .gz files can be submitted, but each file is processed by a single mapper
+      FileOutputFormat.setOutputPath(job, new Path(args[1]));
   
       System.exit(job.waitForCompletion(true) ? 0 : 1);
     }

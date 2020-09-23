@@ -20,7 +20,6 @@ public class wordCountJobCreator {
         job.setMapperClass(wordCountMap.class);
         job.setReducerClass(wordCountReduce.class);
         //combinder class?
-        //reducer class?
 
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
