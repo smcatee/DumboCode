@@ -121,7 +121,7 @@ public class pageRank {
       FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
       Configuration conf = new Configuration();
-      conf.set("mapred.textoutputformat.separator", "\s");
+      conf.set("mapred.textoutputformat.separator", " ");
   
       System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
