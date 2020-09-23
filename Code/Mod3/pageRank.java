@@ -37,18 +37,19 @@ public class pageRank {
 
         String line = value.toString();
         String[] splitLine = line.split("\\s");
-        Queue<Character> linksQueue = new PriorityQueue<>();
+        Queue<String> linksQueue = new PriorityQueue<>();
         float rankOfPage;
-        Text page = new Text("none");
+        float outputRank;
+        String page = new String("none");
         
         for ( String elemInLine : splitLine ) {
 
           if (page.equals("none")) {
             // is page
             page = elemInLine;
-          } else if ( elemInLine.matches("^-?\d*\.{0,1}\d$")) {
+          } else if ( elemInLine.matches("^-?\\d*\\.{0,1}\\d$")) {
             // is rank
-            rankOfPage = parseFloat(elemInLine);
+            rankOfPage = Float.parseFloat(elemInLine);
             outputRank = rankOfPage / linksQueue.size();
           } else {
             // is link
@@ -74,18 +75,17 @@ public class pageRank {
                          Context context
                          ) throws IOException, InterruptedException {
         //input will be pages as keys and values as a list of links and ranks
-        Queue<Character> linksQueue = new PriorityQueue<>();
-        String line = value.toString();
+        Queue<String> linksQueue = new PriorityQueue<>();
+        String line = values.toString();
         String[] splitLine = line.split("\\s");
-        Queue<Character> linksQueue = new PriorityQueue<>();
         float rankOfPage = 0;
-        String outputValue;
+        String outputValue = new String();
 
         for ( String elemInLine : splitLine ) {
 
-          if ( elemInLine.matches("^-?\d*\.{0,1}\d$")) {
+          if ( elemInLine.matches("^-?\\d*\\.{0,1}\\d$")) {
             // is rank
-            rankOfPage += parseFloat(elemInLine);
+            rankOfPage += Float.parseFloat(elemInLine);
           } else {
             // is link
             linksQueue.offer(elemInLine);
@@ -93,11 +93,11 @@ public class pageRank {
         }
         while (linksQueue.size() > 0) {
           // create the string that will be output as value
-          ahhhhhhoutputthing = ahhhhhhoutputthing + " " + linksQueue.poll();
+          outputValue = outputValue + " " + linksQueue.poll();
         }
         // append on rank to output thing
-        ahhhhhhoutputthing =  ahhhhhhoutputthing + " " + rankOfPage;
-        context.write(key, outputTHING);
+        outputValue =  outputValue + " " + rankOfPage;
+        context.write(key, outputValue);
       }
     }
 
