@@ -45,6 +45,7 @@ public class pageRank {
           if (page.equals("none")) {
             // is page
             page = elemInLine;
+            
           } else if ( elemInLine.matches("^-?\\d*\\.{0,1}\\d$")) {
             // is rank
             rankOfPage = Float.parseFloat(elemInLine);
@@ -56,8 +57,8 @@ public class pageRank {
         }
         
         while (linksQueue.size() > 0) {
-          context.write(page, linksQueue.peek());
-          context.write(linksQueue.poll(), outputRank);
+          context.write(new Text(page), new Text(linksQueue.peek()));
+          context.write(new Text(linksQueue.poll()), new Text(outputRank));
         }
         
       }
@@ -95,7 +96,7 @@ public class pageRank {
         }
         // append on rank to output thing
         outputValue =  outputValue + " " + rankOfPage;
-        context.write(key, outputValue);
+        context.write(key, new Text(outputValue));
       }
     }
 
