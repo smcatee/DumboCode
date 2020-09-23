@@ -1,6 +1,6 @@
 import java.io.IOException;
-import java.util.*;
-import java.net.URI;
+import java.util.LinkedList;
+import java.util.Queue;
 
 // Hadoop imports
 import org.apache.hadoop.conf.Configuration;
@@ -68,7 +68,7 @@ public class pageRank {
   
     public class pageRankReducer
          extends Reducer<Text,IntWritable,Text,IntWritable> {
-           
+
            Queue<String> linksQueue = new PriorityQueue<>();
            String line = values.toString();
            String[] splitLine = line.split("\\s");

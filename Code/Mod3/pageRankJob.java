@@ -1,6 +1,4 @@
 import java.io.IOException;
-import java.util.*;
-import java.net.URI;
 
 // Hadoop imports
 import org.apache.hadoop.conf.Configuration;
