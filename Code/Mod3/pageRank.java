@@ -102,7 +102,7 @@ public class pageRank {
       }
 
       Configuration conf = new Configuration();
-      conf.set("mapreduce.textoutputformat.separator", " ");
+      conf.set("mapreduce.textoutputformat.separator", "\\s");
       
       Job job = new Job();
       job.setJobName("page rank");
