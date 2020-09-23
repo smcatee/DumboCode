@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.net.URI;
 
@@ -10,7 +11,12 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 public class pageRankMap
          extends Mapper<Object, Text, Text, IntWritable> {
-  
+             
+             PriorityQueue<String> linksQueue = new PriorityQueue<>();
+             float rankOfPage;
+             float outputRank;
+             String page = "none";
+             
       @Override
       public void map(Object key, Text value, Context context
                       ) throws IOException, InterruptedException {
@@ -18,10 +24,6 @@ public class pageRankMap
 
         String line = value.toString();
         String[] splitLine = line.split("\\s");
-        Queue<String> linksQueue = new PriorityQueue<>();
-        float rankOfPage;
-        float outputRank;
-        String page = "none";
         
         for ( String elemInLine : splitLine ) {
 
@@ -34,7 +36,7 @@ public class pageRankMap
             outputRank = rankOfPage / linksQueue.size();
           } else {
             // is link
-            linksQueue.offer(elemInLine);
+            linksQueue.add(elemInLine);
           }
         }
         

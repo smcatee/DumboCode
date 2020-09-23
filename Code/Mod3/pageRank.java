@@ -1,6 +1,5 @@
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.PriorityQueue;
 
 // Hadoop imports
 import org.apache.hadoop.conf.Configuration;
@@ -30,10 +29,10 @@ public class pageRank {
 
            String line = value.toString();
            String[] splitLine = line.split("\\s");
-           Queue<Text> linksQueue = new PriorityQueue<>();
+           PriorityQueue<String> linksQueue = new PriorityQueue<>();
            float rankOfPage;
            float outputRank;
-           Text page = "none";
+           String page = "none";
   
       @Override
       public void map(Object key, Text value, Context context
@@ -41,7 +40,7 @@ public class pageRank {
         //input will be line# as key and line as value
 
         
-        for ( Text elemInLine : splitLine ) {
+        for ( String elemInLine : splitLine ) {
 
           if (page.equals("none")) {
             // is page
@@ -52,7 +51,7 @@ public class pageRank {
             outputRank = rankOfPage / linksQueue.size();
           } else {
             // is link
-            linksQueue.offer(elemInLine);
+            linksQueue.add(elemInLine);
           }
         }
         
@@ -69,11 +68,11 @@ public class pageRank {
     public class pageRankReducer
          extends Reducer<Text,IntWritable,Text,IntWritable> {
 
-           Queue<String> linksQueue = new PriorityQueue<>();
+           PriorityQueue<String> linksQueue = new PriorityQueue<>();
            String line = values.toString();
            String[] splitLine = line.split("\\s");
            float rankOfPage = 0;
-           Text outputValue = new Text();
+           String outputValue = "";
   
       public void reduce(Text key, Text values,   // values will come in as arrays
                          Context context
@@ -87,7 +86,7 @@ public class pageRank {
             rankOfPage += Float.parseFloat(elemInLine);
           } else {
             // is link
-            linksQueue.offer(elemInLine);
+            linksQueue.add(elemInLine);
           }
         }
         while (linksQueue.size() > 0) {

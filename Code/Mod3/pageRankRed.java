@@ -1,7 +1,5 @@
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.net.URI;
+import java.util.PriorityQueue;
 
 // Hadoop imports
 import org.apache.hadoop.io.IntWritable;
@@ -13,16 +11,16 @@ import org.apache.hadoop.mapreduce.Reducer;
 public class pageRankRed
          extends Reducer<Text,IntWritable,Text,IntWritable> {
            
-           Queue<String> linksQueue = new PriorityQueue<>();
-           String line = values.toString();
-           String[] splitLine = line.split("\\s");
+           PriorityQueue<String> linksQueue = new PriorityQueue<>();
            float rankOfPage = 0;
            String outputValue = new String();
-  
-      public void reduce(Text key, Text values,   // values will come in as arrays
-                         Context context
-                         ) throws IOException, InterruptedException {
-        //input will be pages as keys and values as a list of links and ranks
+           
+           public void reduce(Text key, Text values,   // values will come in as arrays
+           Context context
+           ) throws IOException, InterruptedException {
+               //input will be pages as keys and values as a list of links and ranks
+               String line = values.toString();
+               String[] splitLine = line.split("\\s");
 
         for ( String elemInLine : splitLine ) {
 
@@ -31,7 +29,7 @@ public class pageRankRed
             rankOfPage += Float.parseFloat(elemInLine);
           } else {
             // is link
-            linksQueue.offer(elemInLine);
+            linksQueue.add(elemInLine);
           }
         }
         while (linksQueue.size() > 0) {
