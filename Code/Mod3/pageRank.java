@@ -46,7 +46,7 @@ public class pageRank {
             // is page
             page = elemInLine;
             
-          } else if ( elemInLine.matches("\\d*\\.{0,1}\\d")) {
+          } else if ( elemInLine.matches("\\d*\\.{0,1}\\d*")) {
             // is rank
             outputRank = Double.parseDouble(elemInLine);
           } else {
@@ -79,7 +79,7 @@ public class pageRank {
         // the same key will be output
         // the same values will be output, but if they are numeric they will be added together
         for ( Text elemInLine : values ) {
-          if ( elemInLine.toString().matches("^\\d*\\.{0,1}\\d$")) {
+          if ( elemInLine.toString().matches("^\\d*\\.{0,1}\\d*$")) {
             // is rank
             rankOfPage += Double.parseDouble(elemInLine.toString());
           } else {
