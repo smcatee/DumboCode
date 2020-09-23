@@ -11,8 +11,9 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.StringUtils;
 
@@ -26,7 +27,7 @@ public class pageRank {
     //~~~~~~~~~~~~~~~~~~~~~~~~ MAPPER ~~~~~~~~~~~~~~~~~~~~~~~~
 
     public class pageRankMapper
-         extends Mapper<Object, Text, Text, IntWritable> {
+         extends Mapper<Object, Text, Text, Text> {
 
            PriorityQueue<String> linksQueue = new PriorityQueue<>();
            Double rankOfPage;
@@ -68,7 +69,7 @@ public class pageRank {
     //~~~~~~~~~~~~~~~~~~~~~~~~ REDUCER ~~~~~~~~~~~~~~~~~~~~~~~~
   
     public class pageRankReducer
-         extends Reducer<Text,IntWritable,Text,IntWritable> {
+         extends Reducer<Text,Text,Text,Text> {
 
            PriorityQueue<String> linksQueue = new PriorityQueue<>();
            Double rankOfPage = Double.valueOf(0.0);
@@ -117,6 +118,9 @@ public class pageRank {
       job.setMapperClass(pageRankMapper.class);
       job.setCombinerClass(pageRankReducer.class);
       job.setReducerClass(pageRankReducer.class);
+
+      job.setMapOutputKeyClass(Text.class);
+      job.setMapOutputValueClass(Text.class);
 
       job.setNumReduceTasks(1);
       job.setOutputKeyClass(Text.class);

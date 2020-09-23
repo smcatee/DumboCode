@@ -41,7 +41,7 @@ public class WordCount2 {
     //~~~~~~~~~~~~~~~~~~~~~~~~ MAPPER ~~~~~~~~~~~~~~~~~~~~~~~~
 
     public static class TokenizerMapper //might not compile with 'static' modifier
-         extends Mapper<Object, Text, Text, IntWritable>{
+         extends Mapper<Object, Text, Text, IntWritable>{ //<KEYIN,VALUEIN,KEYOUT,VALUEOUT>
   
       static enum CountersEnum { INPUT_WORDS }
   
@@ -104,7 +104,7 @@ public class WordCount2 {
     //~~~~~~~~~~~~~~~~~~~~~~~~ REDUCER ~~~~~~~~~~~~~~~~~~~~~~~~
   
     public static class IntSumReducer //might not compile with 'static' modifier
-         extends Reducer<Text,IntWritable,Text,IntWritable> {
+         extends Reducer<Text,IntWritable,Text,IntWritable> { //<KEYIN,VALUEIN,KEYOUT,VALUEOUT>
       private IntWritable result = new IntWritable();
   
       public void reduce(Text key, Iterable<IntWritable> values,
