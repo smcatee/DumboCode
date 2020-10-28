@@ -23,4 +23,6 @@ searchTerms_ranked = rank searchTerms;
 
 fullJoin = JOIN searchTerms_ranked BY rank_searchTerms FULL OUTER, counts_ranked BY rank_counts;
 final = FOREACH fullJoin GENERATE $1, $3;
+
+dump final;
 /* Chicago, Dec, Java, hackathon */
