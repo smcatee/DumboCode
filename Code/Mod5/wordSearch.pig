@@ -21,6 +21,6 @@ counts_ranked = rank counts;
 searchTerms_ranked = rank searchTerms;
 
 
-fullJoin = JOIN searchTerms_ranked.$1 BY rank_searchTerms FULL OUTER, counts_ranked.$1 BY rank_counts;
+fullJoin = JOIN searchTerms_ranked BY rank_searchTerms FULL OUTER, counts_ranked BY rank_counts;
 final = FOREACH fullJoin GENERATE $1, $3;
 /* Chicago, Dec, Java, hackathon */
