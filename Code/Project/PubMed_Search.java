@@ -35,11 +35,19 @@ public class PubMed_Search {
         //  
 
         //  enter search term (value) with Entrez PubMed to return DOI
-        //    https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=<database>&term=<query>
+        //    https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=asthma&retmax=5000
         //      include "impact OR correlate OR correlated OR associated" in search
         //      alternatively " "Risk Factors"[MeSH Terms] OR Epidemiology[MeSH] "
+        //        [All Fields] [Author] [Organism] [MeSH Terms] [Properties] 2015/3/1:2016/4/30[Publication Date]
+        //        "diabet*"
         //      there is a way to store history and have entrez combine search results
         //  use UID or returned information
+        //      esummary.fcgi?db=pubmed&id=19393038,30242208,29453458
+        //      eutils PMID search returns
+        //        https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=17284678,9997&retmode=text&rettype=abstract
+        //      pubtator PMID search returns with disease identified
+        //        https://www.ncbi.nlm.nih.gov/research/pubtator-api/publications/export/pubtator?pmids=30229314&concepts=disease
+        //        need to use POST API to get more than 200
         //      get all other easily available attributes, comment out so they are accessible later
         //        e.g. keywords, title, authors, date, journal(s), linked db info, ...
         //  context.write(key=DOI, value=SearchTerm);
