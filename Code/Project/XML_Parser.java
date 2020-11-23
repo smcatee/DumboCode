@@ -1,6 +1,10 @@
 import org.apache.spark.sql.SparkSession;
 
-SparkSession spark = SparkSession.builder().getOrCreate();
+SparkSession spark = SparkSession
+    .builder()
+    .appName("Pubmed Article Set")
+    //.config("spark.some.config.option", "some-value")
+    .getOrCreate();
 DataFrame df = spark.read()
   .format("xml")
   .option("rowTag", "PubmedArticle")
