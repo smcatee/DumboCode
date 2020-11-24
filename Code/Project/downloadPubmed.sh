@@ -16,3 +16,10 @@ rm -f ~/tmp/pubmed*.xml.gz.md5
 
 # Move files to HDFS
 #hdfs dfs -put *.xml /user/sm9553/project
+
+
+
+
+
+
+/Users/smcatee/Desktop/Class\ Notes\ and\ Textbooks/DumboCode/syncDumboCode.sh
