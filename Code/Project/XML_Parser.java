@@ -1,19 +1,26 @@
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-SparkSession spark = SparkSession
-    .builder()
-    .appName("Pubmed Article Set")
-    //.config("spark.some.config.option", "some-value")
-    .getOrCreate();
-DataFrame df = spark.read()
-  .format("xml")
-  .option("rowTag", "PubmedArticle")
-  .load("truncatedPubmed.xml");
+public class XML_Parser {
 
+    public static void main(String[] args) {
+        XML_Parser app = new XML_Parser();
+        app.start();
+    }
 
-// FOR CONVERSION BACK TO XML
-// df.select("author", "_id").write()
-//   .format("xml")
-//   .option("rootTag", "books")
-//   .option("rowTag", "book")
-//   .save("newbooks.xml");
+    private void start() {
+        SparkSession spark = SparkSession
+        .builder()
+        .appName("Pubmed Article Set")
+        .getOrCreate();
+
+        DataFrame df = spark.read()
+            .format("xml")
+            .option("rowTag", "PubmedArticle")
+            .load("truncatedPubmed.xml");
+
+        df.show(5);
+        df.printSchema();
+    }
+}
