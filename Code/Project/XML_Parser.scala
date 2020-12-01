@@ -1,7 +1,12 @@
 import org.apache.spark.sql.SparkSession
 import com.databricks.spark.xml._
 
-val spark = SparkSession.builder.getOrCreate()
-val df = spark.read
-  .option("rowTag", "PubmedArticle")
-  .xml("truncatedPubmed.xml")
+
+object XML_Parser {
+  def main(args: Array[String]) {
+    val spark = SparkSession.builder.appName("XML Parse").getOrCreate()
+    val df = spark.read // sc.read   or   spark.read.format("com.databricks.spark.xml")
+      .option("rowTag", "PubmedArticle")
+      .xml("tmp/pubmed20n1000.xml") // .load("")
+  }
+}
